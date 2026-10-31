@@ -67,8 +67,20 @@ document.addEventListener("DOMContentLoaded", () => {
                         btn.textContent = "";                        
                         btn.style.backgroundColor = "";
                     });
-                    nextPlayer.textContent = "Active Player: " + data.active_player;
+                    nextPlayer.textContent = "Next Player: " + data.active_player_name;
                     gameStatus.textContent = data.status;
+                    //this will work only when the computer is the first player and the computer makes the first move, so we need to update the button with the computer's mark
+                    if (data.cell_index != null) {
+                        // Use backticks and ${} to inject the dynamic cell_index value
+                        const targetButton = document.querySelector(`.grid-btn[data-index="${data.cell_index}"]`);
+
+                        if (targetButton) {
+                        targetButton.textContent = data.sign; // e.g., "X" or "O"
+                        targetButton.disabled = true;
+                        targetButton.style.backgroundColor = "#e0e0e0";
+                    }
+                    }
+                    
                 })
                 .catch(error => {
                     console.error("Error:", error);
@@ -131,6 +143,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 button.disabled = false;
                 button.style.backgroundColor = ""; 
             });
+            //this will work only when the computer is the first player and the computer makes the first move, so we need to update the button with the computer's mark
+            if (data.cell_index != null) {
+                // Use backticks and ${} to inject the dynamic cell_index value
+                const targetButton = document.querySelector(`.grid-btn[data-index="${data.cell_index}"]`);
+
+                if (targetButton) {
+                targetButton.textContent = data.sign; // e.g., "X" or "O"
+                targetButton.disabled = true;
+                targetButton.style.backgroundColor = "#e0e0e0";
+            }
+            }
 
             // Clear result and update header with the new Player 1 name
             gameStatus.textContent = data.status;

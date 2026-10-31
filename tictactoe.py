@@ -3,6 +3,8 @@ from combination import Combination
 from cell import Cell
 import random
 
+import player
+
 
 # initializing cells
 c1 = Cell(1, "", 3)
@@ -74,8 +76,8 @@ combination_list = [co1, co2, co3, co4, co5, co6, co7, co8, co9, co10, co11, co1
 # players
 player1 = Player("Gagani", "O", 1)
 player2 = Player("Vihangi", "X", 2)
-# val=1 human player, val=2 computer player
-opponenant_type=1
+# human or computer
+opponenant_type="human"
 
 
 # deside ist player
@@ -142,7 +144,18 @@ def reset_board():
     #decide defulat first player
     global active_player
     active_player = decide_first_player(player1, player2)
-    return {"status": "continue", "active_player": active_player.get_name()} 
+    global counter
+    counter = 0
+
+    #check if the computer is the first player and make its move
+
+    if opponenant_type == "computer" and player2.get_priority() == 1:
+        cell_index=get_comuter_first_move()
+        #print(cell_index)
+        sign = player2.get_sign()
+        return {"status": "success", "sign": sign, "active_player_name": active_player.get_name(), "cell_index": cell_index}
+    else:        
+        return {"status": "success", "active_player_name": active_player.get_name()}
 
 def update_settings(data):
     opponant_t = data.get("opponent")
@@ -173,7 +186,7 @@ def update_settings(data):
         player1.set_priority(2)
         player2.set_priority(1)
 
-    player = decide_first_player(player1, player2)
+    active_player = decide_first_player(player1, player2)
 
     #reset_board
     for i in cell_list:
@@ -181,21 +194,30 @@ def update_settings(data):
     global counter
     counter = 0
 
-    print(opponenant_type)
-    #print(who_plays_first)
-    #print(player.get_name())
-    return {"status": "success", "active_player_name": player.get_name()}
+    #check if the computer is the first player and make its move
+    if opponenant_type == "computer" and player2.get_priority() == 1:
+        cell_index=get_comuter_first_move()
+        #print(cell_index)
+        sign = player2.get_sign()
+        return {"status": "success", "sign": sign, "active_player_name": active_player.get_name(), "cell_index": cell_index}
+    else:
+        return {"status": "success", "active_player_name": active_player.get_name()}
+
+    
+    
+    
+    
   
        
-def com_first_move():
-    if opponenant_type==2 and player2.get_priority()==1:
+def get_comuter_first_move():
+    if opponenant_type=="computer" and player2.get_priority()==1:
             active_player = player2
-            player2.set_name("agnAp")
+            active_player.set_name("agnAp")
             
             # cell decided by the computer
-            c=other_move(player2.get_sign(),player1.get_sign())
-            cell_list[(c-1)].set_status(player2.get_sign())
-            print(c)
+            cell_index=other_move(player2.get_sign(),player1.get_sign())
+            cell_list[(cell_index-1)].set_status(player2.get_sign())
+            return (cell_index)
             
             
 
