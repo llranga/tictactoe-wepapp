@@ -25,13 +25,37 @@ document.addEventListener("DOMContentLoaded", () => {
                         gameStatus.textContent = data.status;
                         button.textContent = data.sign; // Update button text
                         button.disabled = true; // Disable the button after click
-                        } 
-                        else if(data.status === "win") {
+
+                            //mark the computer's move on the board
+                            if (data.cell_index != null) {
+                            // Use backticks and ${} to inject the dynamic cell_index value
+                            const targetButton = document.querySelector(`.grid-btn[data-index="${data.cell_index}"]`);
+
+                                if (targetButton) {
+                                targetButton.textContent = data.computer_sign; // e.g., "X" or "O"
+                                targetButton.disabled = true;
+                                targetButton.style.backgroundColor = "#e0e0e0";
+                                } 
+                                }
+                            } else if(data.status === "win") {
                             nextPlayer.textContent = "Active Player: " + data.active_player;
                             gameStatus.textContent = "Game Over: " + data.status;
                             button.textContent = data.sign;
                             // diable all buttons after game over
                             buttons.forEach(btn => btn.disabled = true); // Disable all buttons after game over
+
+                            //mark the computer's move on the board
+                            if (data.cell_index != null) {
+                            // Use backticks and ${} to inject the dynamic cell_index value
+                            const targetButton = document.querySelector(`.grid-btn[data-index="${data.cell_index}"]`);
+
+                            if (targetButton) {
+                            targetButton.textContent = data.computer_sign; // e.g., "X" or "O"
+                            targetButton.disabled = true;
+                            targetButton.style.backgroundColor = "#e0e0e0";
+                                } 
+                                }
+
                             // Highlight winning cells
                             if (data.combination) {
                             data.combination.forEach(winningIndex => {

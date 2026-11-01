@@ -99,14 +99,6 @@ def swap_active_player(p1, p2):
         return p1
 
 
-# Tuple with cellobject, int x int y coordinates. (cell object, x, y)
-board = [(c1, 0, 0), (c2, 0, 1), (c3, 0, 2), (c4, 0, 3), (c5, 0, 4),
-         (c6, 1, 0), (c7, 1, 1), (c8, 1, 2), (c9, 1, 3), (c10, 1, 4),
-         (c11, 2, 0), (c12, 2, 1), (c13, 2, 2), (c14, 2, 3), (c15, 2, 4),
-         (c16, 3, 0), (c17, 3, 1), (c18, 3, 2), (c19, 3, 3), (c20, 3, 4),
-         (c21, 4, 0), (c22, 4, 1), (c23, 4, 2), (c24, 4, 3), (c25, 4, 4)]
-
-
 # game logic
 # check geme draw status
 def status_draw():
@@ -148,11 +140,14 @@ def reset_board():
     counter = 0
 
     #check if the computer is the first player and make its move
-
     if opponenant_type == "computer" and player2.get_priority() == 1:
         cell_index=get_comuter_first_move()
         #print(cell_index)
         sign = player2.get_sign()
+        print(sign)
+        active_player = swap_active_player(player1, player2)  # Switch back to human for the next round
+        print(active_player.get_sign())
+        print("Active player after settings update:", active_player.get_name())
         return {"status": "success", "sign": sign, "active_player_name": active_player.get_name(), "cell_index": cell_index}
     else:        
         return {"status": "success", "active_player_name": active_player.get_name()}
@@ -166,6 +161,7 @@ def update_settings(data):
 
     #uodate the global opponant_type variable
     global opponenant_type
+    global player1, player2, active_player
     opponenant_type = (opponant_t)
     # Update player settings
     player1.set_name(p1_name)
@@ -187,7 +183,7 @@ def update_settings(data):
         player2.set_priority(1)
 
     active_player = decide_first_player(player1, player2)
-
+    print("Active player after settings update:", active_player.get_name())
     #reset_board
     for i in cell_list:
             i.set_status("")
@@ -199,20 +195,22 @@ def update_settings(data):
         cell_index=get_comuter_first_move()
         #print(cell_index)
         sign = player2.get_sign()
+        print(sign)
+        active_player = swap_active_player(player1, player2)  # Switch back to human for the next round
+        print(active_player.get_sign())
+        print("Active player after settings update:", active_player.get_name())
         return {"status": "success", "sign": sign, "active_player_name": active_player.get_name(), "cell_index": cell_index}
     else:
         return {"status": "success", "active_player_name": active_player.get_name()}
 
-    
-    
-    
-    
+     
+
   
        
 def get_comuter_first_move():
     if opponenant_type=="computer" and player2.get_priority()==1:
-            active_player = player2
-            active_player.set_name("agnAp")
+            #active_player = player2
+            #active_player.set_name("agnAp")
             
             # cell decided by the computer
             cell_index=other_move(player2.get_sign(),player1.get_sign())
@@ -221,58 +219,7 @@ def get_comuter_first_move():
             
             
 
-# event handling
-def update_setting(opponant_type,who_play_first,my_name,opponat_name,my_sign):
-        player1
-        player2
-        global opponenant_type
-        global active_player
-        print(opponant_type)
-        if opponant_type==1:
-            opponenant_type=1
-        else:
-            opponenant_type=2
-
-        
-        if who_play_first==3:
-            #print(who_play_first)
-            player1.set_priority(1)
-            player2.set_priority(2)
-        else:
-            #print(who_play_first)
-            player1.set_priority(2)
-            player2.set_priority(1)
-        #print(my_name)
-        player1.set_name(my_name)
-        #print(opponat_name)
-        if opponant_type==1:
-            player2.set_name(opponat_name)
-        else:
-            player2.set_name("agnAp")
-        #print(my_sign)
-        if my_sign=="X":
-            player1.set_sign("X")
-            player2.set_sign("O")
-        else:
-            player1.set_sign("O")
-            player2.set_sign("X")
-
-        active_player = decide_first_player(player1,player2)
-        print(opponenant_type)
-        if opponenant_type==2 and player2.get_priority()==1:
-            active_player = player2
-            player2.set_name("agnAp")
-            
-            # cell decided by the computer
-            c=other_move(player2.get_sign(),player1.get_sign())
-            cell_list[(c-1)].set_status(player2.get_sign())
-            print(c)
-            # cell decided by computer is marked on the board
-            l_x = (board[c-1])[1]
-            l_y = (board[c-1])[2]
-            
-
-        
+      
 # game logic
 
 def other_move(player_piece: str, opponant_piece: str):
@@ -427,28 +374,74 @@ def other_move(player_piece: str, opponant_piece: str):
 def process_player_move(cell_id):
     global active_player
     global counter
-
+    
     #check if the cell is already marked
     if str(cell_list[cell_id - 1]) != "":
         return {"status": "error", "message": "Cell is already marked."}
     else:
-
         # Mark the cell with the active player's sign
         cell_list[cell_id - 1].set_status(active_player.get_sign())
         #get the sign of the active player
-        sign = active_player.get_sign()
+        human_sign = active_player.get_sign()
         counter += 1
 
         # Check for win or draw
         if status_win() == 1:
-            return {"status": "win", "sign": sign, "combination": get_win_combination(),"active_player": active_player.get_name()}
+            return {"status": "win", "sign": human_sign, "combination": get_win_combination(),"active_player": active_player.get_name()}
         elif status_draw() == "draw":
-            return {"status": "draw","sign": sign}
-        else:
+            return {"status": "draw","sign": human_sign}
+        '''else:
             # Swap active player
             active_player = swap_active_player(player1, player2)
-        return {"status": "continue", "active_player": active_player.get_name(), "sign": sign}   
-        
+            return {"status": "continue", "active_player": active_player.get_name(), "sign": sign} '''  
+    
+    #computer move from step 2 if game is not over
+    computer_cell_index = None
+    computer_sign = None
+    
+    if opponenant_type == "computer":
+    #temporaly switch active player to computer for the move
+        active_player = swap_active_player(player1, player2)
+        # cell decided by the computer
+        computer_cell_index=other_move(player2.get_sign(),player1.get_sign())
+        print("Computer chose cell index:", computer_cell_index)
+    
+        if computer_cell_index is not None:
+            computer_sign = player2.get_sign()
+            cell_list[(computer_cell_index - 1)].set_status(computer_sign)
+            counter += 1
+
+            # Check if computer won or drew on its turn
+            if status_win() == 1:
+                        return {"status": "win",
+                                 "computer_sign": computer_sign,
+                                 "sign": human_sign,
+                                 "human_cell:": cell_id,
+                                 "cell_index": computer_cell_index,
+                                   "combination": get_win_combination(),
+                                   "active_player": player2.get_name()}
+            elif status_draw() == "draw":
+                        return {"status": "draw",
+                                "sign": human_sign,
+                                "computer_sign": computer_sign,
+                                "human_cell:": cell_id,
+                                "cell_index": computer_cell_index}
+    # Switch back to human for the next round
+    active_player = swap_active_player(player1, player2)
+
+    # 5. Normal game continuation
+    return {
+        "status": "continue", 
+        "human_cell": cell_id,
+        "sign": human_sign,
+        "cell_index": computer_cell_index,
+        "computer_sign": computer_sign,
+        "active_player": active_player.get_name()
+    }
+    
+                       
+            
+                   
             
 
 
