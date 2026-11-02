@@ -1,141 +1,159 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>5x5 Button Grid</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5x5 Tic Tac Toe</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        :root {
-            --board-bg: #ffffff;
-            --btn-bg: #f0f0f0;
-        }
         body {
-            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .game-wrapper {
+            max-width: 440px;
+            margin: 30px auto;
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 20px;
         }
         .header-bar {
             display: flex;
             justify-content: space-between;
-            width: 440px;
+            width: 100%;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
-        .settings-btn {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;}
-
-        /* Creates the 5x5 grid layout */
+        /* Custom CSS Grid to keep the 5x5 layout intact */
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(5, 80px);
-            gap: 10px;
+            grid-template-columns: repeat(5, 78px);
+            gap: 8px;
             margin-bottom: 20px;
         }
         .grid-container button {
-            height: 80px;
-            font-size: 20px;
-            cursor: pointer;
-            background-color: var(--btn-bg);
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            height: 78px;
+            font-size: 26px;
+            font-weight: bold;
         }
-        
-        #restart-btn {
-            padding: 8px 16px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        /* Modal Overlay Styles */
-        .modal {
-            display: none; 
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 300px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-        .modal-content label { display: block; margin-top: 10px; font-weight: bold; }
-        .modal-content input, .modal-content select { width: 100%; padding: 6px; margin-top: 5px; }
-        .modal-actions { margin-top: 15px; display: flex; justify-content: flex-end; gap: 10px; }
-
     </style>
 </head>
 <body>
-    <div class="header-bar">
-        <h3 id="next-player">Next Player: {{ active_player }}</h3>
-        <button id="open-settings" class="settings-btn" title="Settings">⚙️</button>
+
+    <div class="game-wrapper">
+        <!-- Header Bar -->
+        <div class="header-bar">
+            <h5 id="next-player" class="mb-0 fw-bold text-secondary">Next Player: {{ active_player }}</h5>
+            <div class="d-flex align-items-center gap-2">
+                <button id="open-rules" class="btn btn-outline-secondary btn-sm" title="Game Rules">ℹ️</button>
+                <button id="open-settings" class="btn btn-outline-secondary btn-sm" title="Settings">⚙️</button>
+            </div>
+        </div>
+
+        <!-- 5x5 Grid Container -->
+        <div class="grid-container">
+            {% for i in total_buttons %}
+                <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="{{ i }}"></button>
+            {% endfor %}
+        </div> 
+
+        <h5 id="game-status" class="text-danger fw-bold mb-3"></h5>
+
+        <!-- Restart Button -->
+        <button id="restart-btn" class="btn btn-dark w-100 py-2 shadow-sm">Restart Game</button>
     </div>
 
-    <div class="grid-container">
-    {% for i in total_buttons %}
-        <button class="grid-btn" data-index="{{ i }}"></button>
-    {% endfor %}
-    </div>  
+    <!-- Settings Modal (Bootstrap Styled) -->
+    <div class="modal fade" id="settings-modal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="settingsModalLabel">Game Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="setting-opponent" class="form-label fw-semibold">Player 2:</label>
+                        <select id="setting-opponent" class="form-select">
+                            <option value="human">Human Player</option>
+                            <option value="computer">Computer (AI)</option>
+                        </select>
+                    </div>
 
-    
-    <h3 id="game-status"></h3>
-    <!-- Restart Button -->
-    <button id="restart-btn">Restart Game</button>
+                    <div class="mb-3">
+                        <label for="setting-sign" class="form-label fw-semibold">Player 2 Sign:</label>
+                        <select id="setting-sign" class="form-select">
+                            <option value="O">O</option>
+                            <option value="X">X</option>
+                        </select>
+                    </div>
 
-    <!-- Settings Modal -->
-    <div id="settings-modal" class="modal">
-        <div class="modal-content">
-            <h3>Game Settings</h3>
-            
-            <label>Player 2:</label>
-            <select id="setting-opponent">
-                <option value="human">Human Player</option>
-                <option value="computer">Computer (AI)</option>
-            </select>
+                    <div class="mb-3">
+                        <label for="setting-first-player" class="form-label fw-semibold">Who Plays First:</label>
+                        <select id="setting-first-player" class="form-select">
+                            <option value="player1">Player 1</option>
+                            <option value="player2">Player 2</option>
+                        </select>
+                    </div>
 
-            <label>Player 2 Sign:</label>
-            <select id="setting-sign">
-                <option value="O">O</option>
-                <option value="X">X</option>
-            </select>
+                    <div class="mb-3">
+                        <label for="setting-p1-name" class="form-label fw-semibold">Player 1 Name:</label>
+                        <input type="text" id="setting-p1-name" class="form-control" value="player1">
+                    </div>
 
-            <label>Who Plays First:</label>
-            <select id="setting-first-player">
-                <option value="player1">Player 1</option>
-                <option value="player2">Player 2</option>
-            </select>
+                    <div class="mb-3">
+                        <label for="setting-p2-name" class="form-label fw-semibold">Player 2 / AI Name:</label>
+                        <input type="text" id="setting-p2-name" class="form-control" value="player2">
+                    </div>
 
-            <label>Player 1 Name:</label>
-            <input type="text" id="setting-p1-name" value="player1">
-
-            <label>Player 2 / AI Name:</label>
-            <input type="text" id="setting-p2-name" value="player2">
-
-            <label>Board Color Theme:</label>
-            <select id="setting-color">
-                <option value="#f0f0f0">Classic Light</option>
-                <option value="#222222">Dark Mode</option>
-                <option value="#e3f2fd">Soft Blue</option>
-                <option value="#e8f5e9">Soft Green</option>
-            </select>
-
-            <div class="modal-actions">
-                <button id="close-settings">Cancel</button>
-                <button id="save-settings">Save & Restart</button>
+                    <div class="mb-3">
+                        <label for="setting-color" class="form-label fw-semibold">Board Color Theme:</label>
+                        <select id="setting-color" class="form-select">
+                            <option value="btn-light">Classic Light</option>
+                            <option value="btn-dark">Dark Mode</option>
+                            <option value="btn-outline-primary">Soft Blue</option>
+                            <option value="btn-outline-success">Soft Green</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" id="close-settings">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="save-settings">Save & Restart</button>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Game Rules Modal (Bootstrap Styled) -->
+    <div class="modal fade" id="rules-modal" tabindex="-1" aria-labelledby="rulesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="rulesModalLabel">Game Rules</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="ps-3 mb-3">
+                        <li class="mb-2">The game is played on a 5x5 grid.</li>
+                        <li class="mb-2">Players take turns placing their mark (X or O) in an empty cell.</li>
+                        <li class="mb-2">The first player to align 4 marks in a row (horizontally, vertically, or diagonally) wins!</li>
+                        <li class="mb-2">If all cells are filled and no player has 4 in a row, the game results in a draw.</li>
+                        <li class="mb-2">You can play the game against a friend or challenge the computer! (agnAp game engine)</li>
+                    </ul>
+                    <hr>
+                    <small class="text-muted d-block text-center">© 2026 Tic Tac Toe<br>agnAp Colombo, Sri Lanka</small>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-rules">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JavaScript Bundle (Required for Modals) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- External JavaScript linked via Flask url_for -->
     <script src="{{ url_for('static', filename='js/clickscript.js') }}"></script>
-    
     
 </body>
 </html>
