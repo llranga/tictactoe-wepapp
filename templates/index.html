@@ -43,18 +43,40 @@
     <div class="game-wrapper">
         <!-- Header Bar -->
         <div class="header-bar">
-            <h5 id="next-player" class="mb-0 fw-bold text-secondary">Next Player: {{ active_player }}</h5>
+            <h5 id="next-player" class="mb-0 fw-bold text-secondary">Next Player: Gagani</h5>
             <div class="d-flex align-items-center gap-2">
                 <button id="open-rules" class="btn btn-outline-secondary btn-sm" title="Game Rules">ℹ️</button>
                 <button id="open-settings" class="btn btn-outline-secondary btn-sm" title="Settings">⚙️</button>
             </div>
         </div>
 
-        <!-- 5x5 Grid Container -->
+        <!-- 5x5 Grid Container (Hardcoded 1 to 25 for static offline mobile support) -->
         <div class="grid-container">
-            {% for i in total_buttons %}
-                <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="{{ i }}"></button>
-            {% endfor %}
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="1"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="2"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="3"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="4"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="5"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="6"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="7"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="8"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="9"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="10"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="11"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="12"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="13"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="14"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="15"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="16"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="17"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="18"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="19"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="20"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="21"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="22"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="23"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="24"></button>
+            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="25"></button>
         </div> 
 
         <h5 id="game-status" class="text-danger fw-bold mb-3"></h5>
@@ -84,7 +106,7 @@
                         <label for="setting-sign" class="form-label fw-semibold">Player 2 Sign:</label>
                         <select id="setting-sign" class="form-select">
                             <option value="O">O</option>
-                            <option value="X">X</option>
+                            <option value="X" selected>X</option>
                         </select>
                     </div>
 
@@ -98,12 +120,12 @@
 
                     <div class="mb-3">
                         <label for="setting-p1-name" class="form-label fw-semibold">Player 1 Name:</label>
-                        <input type="text" id="setting-p1-name" class="form-control" value="player1">
+                        <input type="text" id="setting-p1-name" class="form-control" value="Gagani">
                     </div>
 
                     <div class="mb-3">
                         <label for="setting-p2-name" class="form-label fw-semibold">Player 2 / AI Name:</label>
-                        <input type="text" id="setting-p2-name" class="form-control" value="player2">
+                        <input type="text" id="setting-p2-name" class="form-control" value="Vihangi">
                     </div>
 
                     <div class="mb-3">
@@ -150,10 +172,12 @@
         </div>
     </div>
 
-    <!-- Bootstrap 5 JavaScript Bundle (Required for Modals) -->
+    <!-- Bootstrap 5 JavaScript Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- External JavaScript linked via Flask url_for -->
-    <script src="{{ url_for('static', filename='js/clickscript.js') }}"></script>
+    
+    <!-- Linked local JavaScript files for offline execution -->
+    <script src="../static/js/gamelogic.js"></script>
+    <script src="../static/js/clickscript.js"></script>
     
 </body>
 </html>

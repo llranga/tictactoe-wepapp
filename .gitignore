@@ -1,5 +1,11 @@
-# .gitignore
-venv/
-__pycache__/
-*.pyc
+# Node modules (installed via npm)
+node_modules/
+
+# Capacitor native build output folders
+android/
+ios/
+www/
+
+# OS-generated metadata
 .DS_Store
+Thumbs.db
