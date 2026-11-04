@@ -9,3 +9,16 @@ www/
 # OS-generated metadata
 .DS_Store
 Thumbs.db
+
+# Python virtual environments
+env/
+venv/
+ENV/
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables file (if you use one)
+.env
