@@ -6,37 +6,62 @@
     <title>5x5 Tic Tac Toe</title>
     <!-- Bootstrap 5 CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .game-wrapper {
-            max-width: 440px;
-            margin: 30px auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .header-bar {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        /* Custom CSS Grid to keep the 5x5 layout intact */
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(5, 78px);
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-        .grid-container button {
-            height: 78px;
-            font-size: 26px;
-            font-weight: bold;
-        }
-    </style>
+<style>
+    body {
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .game-wrapper {
+        max-width: 440px;
+        margin: 30px auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .header-bar {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(5, 78px);
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+    .grid-container button {
+        height: 78px;
+        font-size: 26px;
+        font-weight: bold;
+        transition: all 0.2s ease-in-out;
+    }
+
+    /* --- CUSTOM THEMES --- */
+    body.theme-ocean-obsidian { background-color: #0F172A; color: #F8FAFC; }
+    body.theme-ocean-obsidian .header-bar h5, body.theme-ocean-obsidian #game-status { color: #38BDF8 !important; }
+    body.theme-ocean-obsidian .grid-container button { background-color: #1E293B; color: #F8FAFC; border: 1px solid #334155; }
+    body.theme-ocean-obsidian .grid-container button:hover:not(:disabled) { border-color: #38BDF8; box-shadow: 0 0 10px rgba(56, 189, 248, 0.4); }
+    body.theme-ocean-obsidian .modal-content { background-color: #1E293B; color: #F8FAFC; }
+    body.theme-ocean-obsidian .form-control, body.theme-ocean-obsidian .form-select { background-color: #0F172A; color: #F8FAFC; border-color: #334155; }
+
+    body.theme-emerald-mint { background-color: #F1F5F9; color: #0F172A; }
+    body.theme-emerald-mint .header-bar h5 { color: #059669 !important; }
+    body.theme-emerald-mint .grid-container button { background-color: #FFFFFF; color: #0F172A; border: 1px solid #CBD5E1; }
+    body.theme-emerald-mint .grid-container button:hover:not(:disabled) { border-color: #059669; background-color: #F8FAFC; }
+
+    body.theme-sunset-cyber { background-color: #18181B; color: #FAFAFA; }
+    body.theme-sunset-cyber .header-bar h5, body.theme-sunset-cyber #game-status { color: #8B5CF6 !important; }
+    body.theme-sunset-cyber .grid-container button { background-color: #27272A; color: #FAFAFA; border: 1px solid #3F3F46; }
+    body.theme-sunset-cyber .grid-container button:hover:not(:disabled) { border-color: #EC4899; box-shadow: 0 0 10px rgba(236, 72, 153, 0.4); }
+    body.theme-sunset-cyber .modal-content { background-color: #27272A; color: #FAFAFA; }
+    body.theme-sunset-cyber .form-control, body.theme-sunset-cyber .form-select { background-color: #18181B; color: #FAFAFA; border-color: #3F3F46; }
+
+    body.theme-slate-minimal { background-color: #FAFAFA; color: #1E293B; }
+    body.theme-slate-minimal .header-bar h5 { color: #2563EB !important; }
+    body.theme-slate-minimal .grid-container button { background-color: #FFFFFF; color: #1E293B; border: 1px solid #E2E8F0; }
+    body.theme-slate-minimal .grid-container button:hover:not(:disabled) { border-color: #2563EB; background-color: #F8FAFC; }
+</style>
 </head>
 <body>
 
@@ -50,34 +75,8 @@
             </div>
         </div>
 
-        <!-- 5x5 Grid Container (Hardcoded 1 to 25 for static offline mobile support) -->
-        <div class="grid-container">
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="1"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="2"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="3"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="4"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="5"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="6"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="7"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="8"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="9"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="10"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="11"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="12"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="13"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="14"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="15"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="16"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="17"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="18"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="19"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="20"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="21"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="22"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="23"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="24"></button>
-            <button class="btn btn-outline-primary grid-btn shadow-sm" data-index="25"></button>
-        </div> 
+        <!-- 5x5 Grid Container (Generated dynamically by JS) -->
+        <div class="grid-container" id="grid-container"></div> 
 
         <h5 id="game-status" class="text-danger fw-bold mb-3"></h5>
 
@@ -85,12 +84,12 @@
         <button id="restart-btn" class="btn btn-dark w-100 py-2 shadow-sm">Restart Game</button>
     </div>
 
-    <!-- Settings Modal (Bootstrap Styled) -->
-    <div class="modal fade" id="settings-modal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+    <!-- Settings Modal -->
+    <div class="modal fade" id="settings-modal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content shadow">
                 <div class="modal-header">
-                    <h5 class="modal-title fw-bold" id="settingsModalLabel">Game Settings</h5>
+                    <h5 class="modal-title fw-bold">Game Settings</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -101,7 +100,6 @@
                             <option value="computer">Computer (AI)</option>
                         </select>
                     </div>
-
                     <div class="mb-3">
                         <label for="setting-sign" class="form-label fw-semibold">Player 2 Sign:</label>
                         <select id="setting-sign" class="form-select">
@@ -109,7 +107,6 @@
                             <option value="X" selected>X</option>
                         </select>
                     </div>
-
                     <div class="mb-3">
                         <label for="setting-first-player" class="form-label fw-semibold">Who Plays First:</label>
                         <select id="setting-first-player" class="form-select">
@@ -117,67 +114,60 @@
                             <option value="player2">Player 2</option>
                         </select>
                     </div>
-
                     <div class="mb-3">
                         <label for="setting-p1-name" class="form-label fw-semibold">Player 1 Name:</label>
                         <input type="text" id="setting-p1-name" class="form-control" value="Gagani">
                     </div>
-
                     <div class="mb-3">
                         <label for="setting-p2-name" class="form-label fw-semibold">Player 2 / AI Name:</label>
                         <input type="text" id="setting-p2-name" class="form-control" value="Vihangi">
                     </div>
-
                     <div class="mb-3">
                         <label for="setting-color" class="form-label fw-semibold">Board Color Theme:</label>
                         <select id="setting-color" class="form-select">
-                            <option value="btn-light">Classic Light</option>
-                            <option value="btn-dark">Dark Mode</option>
-                            <option value="btn-outline-primary">Soft Blue</option>
-                            <option value="btn-outline-success">Soft Green</option>
+                            <option value="theme-ocean-obsidian">Ocean Obsidian (Dark Tech)</option>
+                            <option value="theme-emerald-mint">Emerald Mint (Fresh Light)</option>
+                            <option value="theme-sunset-cyber">Sunset Cyber (Esports)</option>
+                            <option value="theme-slate-minimal">Slate Minimal (Professional)</option>
                         </select>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" id="close-settings">Cancel</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-primary" id="save-settings">Save & Restart</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Game Rules Modal (Bootstrap Styled) -->
-    <div class="modal fade" id="rules-modal" tabindex="-1" aria-labelledby="rulesModalLabel" aria-hidden="true">
+    <!-- Game Rules Modal -->
+    <div class="modal fade" id="rules-modal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content shadow">
                 <div class="modal-header">
-                    <h5 class="modal-title fw-bold" id="rulesModalLabel">Game Rules</h5>
+                    <h5 class="modal-title fw-bold">Game Rules</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <ul class="ps-3 mb-3">
                         <li class="mb-2">The game is played on a 5x5 grid.</li>
                         <li class="mb-2">Players take turns placing their mark (X or O) in an empty cell.</li>
-                        <li class="mb-2">The first player to align 4 marks in a row (horizontally, vertically, or diagonally) wins!</li>
-                        <li class="mb-2">If all cells are filled and no player has 4 in a row, the game results in a draw.</li>
-                        <li class="mb-2">You can play the game against a friend or challenge the computer! (agnAp game engine)</li>
+                        <li class="mb-2">The first player to align 4 marks in a row wins!</li>
+                        <li class="mb-2">Play against a friend or challenge the computer (agnAp engine).</li>
                     </ul>
                     <hr>
                     <small class="text-muted d-block text-center">© 2026 Tic Tac Toe<br>agnAp Colombo, Sri Lanka</small>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-rules">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap 5 JavaScript Bundle -->
+    <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Linked local JavaScript files for offline execution -->
-    <script src="../static/js/gamelogic.js"></script>
+    <!-- JavaScript Game Engine & UI Logic -->
     <script src="../static/js/clickscript.js"></script>
-    
 </body>
 </html>
