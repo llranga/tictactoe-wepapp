@@ -11,30 +11,33 @@ document.addEventListener("DOMContentLoaded", () => {
     const settingsModal = new bootstrap.Modal(settingsModalEl);
     const rulesModal = new bootstrap.Modal(rulesModalEl);
 
-    // --- BOOTSTRAP THEME SETUP ---
+    /// --- CUSTOM THEME SETUP ---
     const colorSelect = document.getElementById("setting-color");
 
-    function applyBootstrapTheme(themeClass) {
-        buttons.forEach(button => {
-            // Remove old theme classes
-            button.classList.remove("btn-light", "btn-dark", "btn-outline-primary", "btn-outline-success");
-            // Add the new theme class
-            button.classList.add(themeClass);
-        });
+    function applyTheme(themeClass) {
+        // Remove all previous theme classes from body
+        document.body.classList.remove(
+            "theme-ocean-obsidian", 
+            "theme-emerald-mint", 
+            "theme-sunset-cyber", 
+            "theme-slate-minimal"
+        );
+        // Add the chosen theme class
+        document.body.classList.add(themeClass);
     }
 
-    // Load saved theme on startup if available (default to btn-light)
-    const savedTheme = localStorage.getItem("board_theme") || "btn-light";
-    applyBootstrapTheme(savedTheme);
+    // Load saved theme on startup (default to ocean-obsidian)
+    const savedTheme = localStorage.getItem("board_theme") || "theme-ocean-obsidian";
+    applyTheme(savedTheme);
     if (colorSelect) {
         colorSelect.value = savedTheme;
     }
 
-    // Live preview of board theme changes instantly
+    // Live preview of theme changes instantly
     if (colorSelect) {
         colorSelect.addEventListener("change", (e) => {
             const chosenTheme = e.target.value;
-            applyBootstrapTheme(chosenTheme);
+            applyTheme(chosenTheme);
             localStorage.setItem("board_theme", chosenTheme);
         });
     }
